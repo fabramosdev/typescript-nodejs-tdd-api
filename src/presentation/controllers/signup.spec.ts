@@ -15,7 +15,6 @@ const makeEmailValidator = (): EmailValidator => {
   }
   return new EmailValidatorStub()
 }
-
 const makeEmailValidatorWithError = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
