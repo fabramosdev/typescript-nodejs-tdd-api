@@ -17,7 +17,7 @@ export class SignUpController implements Controller {
     this.addAccount = addAccount;
   }
 
-  handle(httpRequest: HttpRequest): HttpResponse {
+  async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     const requiredFields = [
       "name",
       "email",
@@ -41,7 +41,11 @@ export class SignUpController implements Controller {
       if (!isValid) {
         return badRequest(new InvalidParamError("email"));
       }
-      const account = this.addAccount.add({ name, email, password });
+      const account = await this.addAccount.add({
+        name,
+        email,
+        password,
+      });
 
       return ok(account);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
