@@ -48,8 +48,8 @@ export class SignUpController implements Controller {
       });
 
       return ok(account);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
+      console.error(error);
       return serverError();
     }
   }
