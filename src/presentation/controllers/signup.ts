@@ -1,32 +1,43 @@
-import { HttpRequest, HttpResponse, Controller, EmailValidator } from '../protocols'
-import { MissingParamError, InvalidParamError } from '../errors'
-import { badRequest, serverError } from '../helpers/http-helper'
-
+import {
+  HttpRequest,
+  HttpResponse,
+  Controller,
+  EmailValidator,
+} from "../protocols";
+import { MissingParamError, InvalidParamError } from "../errors";
+import { badRequest, serverError } from "../helpers/http-helper";
 
 export class SignUpController implements Controller {
-  private readonly emailValidator: EmailValidator
-  
+  private readonly emailValidator: EmailValidator;
+
   constructor(emailValidator: EmailValidator) {
-    this.emailValidator = emailValidator  
+    this.emailValidator = emailValidator;
   }
 
   handle(httpRequest: HttpRequest): HttpResponse {
-
-    const requiredFields = ['name', 'email', 'password', 'passwordConfirmation']
+    const requiredFields = [
+      "name",
+      "email",
+      "password",
+      "passwordConfirmation",
+    ];
 
     try {
-      for(const field of requiredFields) {
-        if(!httpRequest.body[field]) {
-          return badRequest(new MissingParamError(field))
-        } 
+      for (const field of requiredFields) {
+        if (!httpRequest.body[field]) {
+          return badRequest(new MissingParamError(field));
+        }
       }
-      const isValid = this.emailValidator.isValid(httpRequest.body.email)
-        if(!isValid) {
-          return badRequest(new InvalidParamError('email'))
+      if (httpRequest.body.password !== httpRequest.body.passwordConfirmation) {
+        return badRequest(new InvalidParamError("passwordConfirmation"));
       }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const isValid = this.emailValidator.isValid(httpRequest.body.email);
+      if (!isValid) {
+        return badRequest(new InvalidParamError("email"));
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      return serverError()
+      return serverError();
     }
   }
 }
